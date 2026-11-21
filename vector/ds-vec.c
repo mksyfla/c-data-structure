@@ -1,4 +1,5 @@
 #include "ds-vec.h"
+#include <corecrt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -65,23 +66,7 @@ size_t vec_capacity(const vec_t *vec) {
 
 bool vec_is_empty(const vec_t *vec) { return vec == NULL || vec->size == 0; }
 
-status_t vec_reserve(vec_t *vec, size_t new_cap) {
-  if (vec == NULL)
-    return DS_ERR_INVALID_ARG;
-
-  if (new_cap <= vec->capacity)
-    return DS_OK;
-
-  void **temp = realloc(vec->data, new_cap * sizeof(*vec->data));
-  if (temp == NULL)
-    return DS_ERR_ALLOC;
-
-  vec->data = temp;
-  vec->capacity = new_cap;
-  return DS_OK;
-}
-
-status_t vec_grow(vec_t *vec) {
+static status_t vec_grow(vec_t *vec) {
   if (vec == NULL)
     return DS_ERR_INVALID_ARG;
 
@@ -96,23 +81,20 @@ status_t vec_grow(vec_t *vec) {
   return DS_OK;
 }
 
-status_t vec_shrink(vec_t *vec) {
+static status_t vec_shrink(vec_t *vec) {
   if (vec == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (vec->capacity <= VEC_DEFAULT_CAP || vec->size > vec->capacity / 4)
+  size_t target_cap = vec->size < VEC_DEFAULT_CAP ? VEC_DEFAULT_CAP : vec->size;
+  if (target_cap == vec->capacity)
     return DS_OK;
 
-  size_t new_cap = vec->capacity / 2;
-  if (new_cap < VEC_DEFAULT_CAP)
-    new_cap = VEC_DEFAULT_CAP;
-
-  void **temp = realloc(vec->data, new_cap * sizeof(*vec->data));
+  void **temp = realloc(vec->data, target_cap * sizeof(*vec->data));
   if (temp == NULL)
     return DS_ERR_ALLOC;
 
   vec->data = temp;
-  vec->capacity = new_cap;
+  vec->capacity = target_cap;
   return DS_OK;
 }
 
@@ -177,7 +159,7 @@ status_t vec_remove(vec_t *vec, size_t index, void **out_item) {
   if (vec->size == 0)
     return DS_ERR_EMPTY;
 
-  if (index > vec->size)
+  if (index >= vec->size)
     return DS_ERR_OUT_OF_BOUNDS;
 
   *out_item = vec->data[index];

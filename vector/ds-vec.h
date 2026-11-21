@@ -17,8 +17,6 @@ void vec_clear(vec_t *vec);
 size_t vec_size(const vec_t *vec);
 size_t vec_capacity(const vec_t *vec);
 bool vec_is_empty(const vec_t *vec);
-status_t vec_reserve(vec_t *vec, size_t new_cap);
-status_t vec_shrink_to_fit(vec_t *vec);
 
 // Modifiers
 status_t vec_push(vec_t *vec, void *item);

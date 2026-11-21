@@ -1,0 +1,28 @@
+#ifndef DS_STACK_H
+#define DS_STACK_H
+
+#include "../errors/ds-error.h"
+#include <stddef.h>
+#include <stdbool.h>
+
+typedef struct stack_node stack_node_t;
+typedef struct ds_stack stack_t;
+typedef void (*free_fn)(void *ptr);
+
+// Lifecycle
+stack_t *stack_create(free_fn free_fn);
+void stack_destroy(stack_t *stack);
+void stack_clear(stack_t *stack);
+
+// Capacity & Info
+size_t stack_size(const stack_t *stack);
+bool stack_is_empty(const stack_t *stack);
+
+// Modifiers
+status_t stack_push(stack_t *stack, void *item);
+status_t stack_pop(stack_t *stack, void **out_item);
+
+// Access
+status_t stack_peek(const stack_t *stack, void **out_item);
+
+#endif
