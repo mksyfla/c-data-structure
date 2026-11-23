@@ -24,5 +24,6 @@ status_t stack_pop(stack_t *stack, void **out_item);
 // Access
 status_t stack_peek(const stack_t *stack, void **out_item);
 status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item);
+bool stack_contains(const stack_t *stack, const void *item, cmp_fn cmp);
 
 #endif
