@@ -141,7 +141,7 @@ status_t vector_insert(vector_t *vector, size_t index, void *item) {
   if (vector == NULL || item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index > vector->size)
+  if (index >= vector->size || index < 0)
     return DS_ERR_OUT_OF_BOUNDS;
 
   if (vector->size == vector->capacity) {
@@ -165,7 +165,7 @@ status_t vector_remove(vector_t *vector, size_t index, void **out_item) {
   if (vector->size == 0)
     return DS_ERR_EMPTY;
 
-  if (index >= vector->size)
+  if (index >= vector->size || index < 0)
     return DS_ERR_OUT_OF_BOUNDS;
 
   *out_item = vector->data[index];
@@ -184,7 +184,7 @@ status_t vector_set(vector_t *vector, size_t index, void *item) {
   if (vector == NULL || item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index >= vector->size)
+  if (index >= vector->size || index < 0)
     return DS_ERR_OUT_OF_BOUNDS;
 
   if (vector->free_fn != NULL && vector->data[index] != NULL &&
@@ -200,7 +200,7 @@ status_t vector_get(const vector_t *vector, size_t index, void **out_item) {
   if (vector == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index >= vector->size)
+  if (index >= vector->size || index < 0)
     return DS_ERR_OUT_OF_BOUNDS;
 
   *out_item = vector->data[index];
