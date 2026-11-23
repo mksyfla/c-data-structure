@@ -1,7 +1,8 @@
-#ifndef DS_VECtor_H
-#define DS_VECtor_H
+#ifndef DS_VECTOR_H
+#define DS_VECTOR_H
 
 #include "../core/ds-types.h"
+#include <corecrt.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -22,10 +23,11 @@ status_t vector_push(vector_t *vector, void *item);
 status_t vector_pop(vector_t *vector, void **out_item);
 status_t vector_insert(vector_t *vector, size_t index, void *item);
 status_t vector_remove(vector_t *vector, size_t index, void **out_item);
+status_t vector_set(vector_t *vector, size_t index, void *item);
 
 // Access
 status_t vector_get(const vector_t *vector, size_t index, void **out_item);
-status_t vector_set(vector_t *vector, size_t index, void *item);
-void **vector_data(vector_t *vector);
+bool vector_contains(const vector_t *vector, const void *item, cmp_fn cmp);
+size_t vector_index_of(const vector_t *vector, const void *item, cmp_fn cmp);
 
 #endif

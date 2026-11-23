@@ -1,4 +1,5 @@
 #include "../../include/linear/ds-vector.h"
+#include <corecrt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -179,18 +180,6 @@ status_t vector_remove(vector_t *vector, size_t index, void **out_item) {
   return DS_OK;
 }
 
-// Access
-status_t vector_get(const vector_t *vector, size_t index, void **out_item) {
-  if (vector == NULL || out_item == NULL)
-    return DS_ERR_INVALID_ARG;
-
-  if (index >= vector->size)
-    return DS_ERR_OUT_OF_BOUNDS;
-
-  *out_item = vector->data[index];
-  return DS_OK;
-}
-
 status_t vector_set(vector_t *vector, size_t index, void *item) {
   if (vector == NULL || item == NULL)
     return DS_ERR_INVALID_ARG;
@@ -206,9 +195,36 @@ status_t vector_set(vector_t *vector, size_t index, void *item) {
   return DS_OK;
 }
 
-void **vector_data(vector_t *vector) {
-  if (vector == NULL)
-    return NULL;
+// Access
+status_t vector_get(const vector_t *vector, size_t index, void **out_item) {
+  if (vector == NULL || out_item == NULL)
+    return DS_ERR_INVALID_ARG;
 
-  return vector->data;
+  if (index >= vector->size)
+    return DS_ERR_OUT_OF_BOUNDS;
+
+  *out_item = vector->data[index];
+  return DS_OK;
+}
+
+bool vector_contains(const vector_t *vector, const void *item, cmp_fn cmp) {
+  if (vector == NULL || item == NULL || cmp == NULL)
+    return false;
+
+  for (int i = 0; i < vector->size; i++)
+    if (cmp(vector->data[i], item) == 0)
+      return true;
+
+  return false;
+}
+
+size_t vector_index_of(const vector_t *vector, const void *item, cmp_fn cmp) {
+  if (vector == NULL || item == NULL || cmp == NULL)
+    return -1;
+
+  for (size_t i = 0; i < vector->size; i++)
+    if (cmp(vector->data[i], item) == 0)
+      return i;
+
+  return -1;
 }
