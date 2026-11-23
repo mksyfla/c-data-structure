@@ -1,6 +1,8 @@
 #ifndef DS_TYPES_H
 #define DS_TYPES_H
 
+#define vector_DEFAULT_CAP 8
+
 typedef enum {
     DS_OK = 0,
     DS_ERR_ALLOC,

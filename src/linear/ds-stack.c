@@ -1,5 +1,4 @@
 #include "../../include/linear/ds-stack.h"
-#include <corecrt.h>
 #include <stdlib.h>
 
 struct stack_node {
@@ -11,10 +10,14 @@ struct ds_stack {
   stack_node_t *top;
   size_t size;
   free_fn free_fn;
+  cmp_fn cmp_fn;
 };
 
 // Lifecycle
-stack_t *stack_create(free_fn free_fn) {
+stack_t *stack_create(free_fn free_fn, cmp_fn cmp) {
+  if (free_fn == NULL || cmp == NULL)
+    return NULL;
+
   stack_t *stack = malloc(sizeof(stack_t));
   if (stack == NULL)
     return NULL;
@@ -22,6 +25,7 @@ stack_t *stack_create(free_fn free_fn) {
   stack->top = NULL;
   stack->size = 0;
   stack->free_fn = free_fn;
+  stack->cmp_fn = cmp;
   return stack;
 }
 
@@ -136,13 +140,13 @@ status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item) {
   return DS_OK;
 }
 
-bool stack_contains(const stack_t *stack, const void *item, cmp_fn cmp) {
-  if (stack == NULL || item == NULL || cmp == NULL)
+bool stack_contains(const stack_t *stack, const void *item) {
+  if (stack == NULL || item == NULL)
     return false;
 
   stack_node_t *curr = stack->top;
   while (curr != NULL) {
-    if (cmp(curr->data, item) == 0)
+    if (stack->cmp_fn(curr->data, item) == 0)
       return true;
 
     curr = curr->next;

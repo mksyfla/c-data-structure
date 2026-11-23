@@ -8,15 +8,20 @@ struct deque_node {
   struct deque_node *next;
   struct deque_node *back;
 };
+
 struct ds_deque {
   deque_node_t *front;
   deque_node_t *rear;
   size_t size;
   free_fn free_fn;
+  cmp_fn cmp_fn;
 };
 
 // Lifecycle
-deque_t *deque_create(free_fn free_fn) {
+deque_t *deque_create(free_fn free_fn, cmp_fn cmp) {
+  if (free_fn == NULL || cmp == NULL)
+    return NULL;
+
   deque_t *deque = malloc(sizeof(deque_t));
   if (deque == NULL)
     return NULL;
@@ -24,6 +29,7 @@ deque_t *deque_create(free_fn free_fn) {
   deque->front = deque->rear = NULL;
   deque->size = 0;
   deque->free_fn = free_fn;
+  deque->cmp_fn = cmp;
   return deque;
 }
 
@@ -180,13 +186,13 @@ status_t deque_peek_rear(const deque_t *deque, void **out_item) {
   return DS_OK;
 }
 
-bool deque_contains(const deque_t *deque, const void *item, cmp_fn cmp) {
+bool deque_contains(const deque_t *deque, const void *item) {
   if (deque == NULL || item == NULL)
     return false;
 
   deque_node_t *curr = deque->front;
   while (curr != NULL) {
-    if (cmp(curr->data, item) == 0)
+    if (deque->cmp_fn(curr->data, item) == 0)
       return true;
 
     curr = curr->next;

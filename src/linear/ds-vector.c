@@ -1,21 +1,22 @@
 #include "../../include/linear/ds-vector.h"
-#include <corecrt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-#define vector_DEFAULT_CAP 8
 
 struct ds_vector {
   void **data;
   size_t size;
   size_t capacity;
   free_fn free_fn;
+  cmp_fn cmp_fn;
 };
 
 // Lifecycle
-vector_t *vector_create(size_t initial_cap, free_fn free_fn) {
+vector_t *vector_create(size_t initial_cap, free_fn free_fn, cmp_fn cmp) {
+  if (free_fn == NULL || cmp == NULL)
+    return NULL;
+
   vector_t *vector = malloc(sizeof(vector_t));
   if (vector == NULL)
     return NULL;
@@ -31,6 +32,7 @@ vector_t *vector_create(size_t initial_cap, free_fn free_fn) {
   vector->capacity = initial_cap;
   vector->size = 0;
   vector->free_fn = free_fn;
+  vector->cmp_fn = cmp;
   return vector;
 }
 
@@ -207,23 +209,23 @@ status_t vector_get(const vector_t *vector, size_t index, void **out_item) {
   return DS_OK;
 }
 
-bool vector_contains(const vector_t *vector, const void *item, cmp_fn cmp) {
-  if (vector == NULL || item == NULL || cmp == NULL)
+bool vector_contains(const vector_t *vector, const void *item) {
+  if (vector == NULL || item == NULL)
     return false;
 
   for (int i = 0; i < vector->size; i++)
-    if (cmp(vector->data[i], item) == 0)
+    if (vector->cmp_fn(vector->data[i], item) == 0)
       return true;
 
   return false;
 }
 
-size_t vector_index_of(const vector_t *vector, const void *item, cmp_fn cmp) {
-  if (vector == NULL || item == NULL || cmp == NULL)
+size_t vector_index_of(const vector_t *vector, const void *item) {
+  if (vector == NULL || item == NULL)
     return -1;
 
   for (size_t i = 0; i < vector->size; i++)
-    if (cmp(vector->data[i], item) == 0)
+    if (vector->cmp_fn(vector->data[i], item) == 0)
       return i;
 
   return -1;

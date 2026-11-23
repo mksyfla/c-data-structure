@@ -2,14 +2,13 @@
 #define DS_VECTOR_H
 
 #include "../core/ds-types.h"
-#include <corecrt.h>
 #include <stddef.h>
 #include <stdbool.h>
 
 typedef struct ds_vector vector_t;
 
 // Lifecycle
-vector_t *vector_create(size_t initial_cap, free_fn free_fn);
+vector_t *vector_create(size_t initial_cap, free_fn free_fn, cmp_fn cmp);
 void vector_destroy(vector_t *vector);
 void vector_clear(vector_t *vector);
 
@@ -27,7 +26,7 @@ status_t vector_set(vector_t *vector, size_t index, void *item);
 
 // Access
 status_t vector_get(const vector_t *vector, size_t index, void **out_item);
-bool vector_contains(const vector_t *vector, const void *item, cmp_fn cmp);
-size_t vector_index_of(const vector_t *vector, const void *item, cmp_fn cmp);
+bool vector_contains(const vector_t *vector, const void *item);
+size_t vector_index_of(const vector_t *vector, const void *item);
 
 #endif
