@@ -5,33 +5,24 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-typedef struct ds_vec {
-    void **data;
-    size_t size;
-    size_t capacity;
-    free_fn free_fn;
-} vec_t;
+typedef struct ds_hash_map hash_map_t;
 
 // Lifecycle
-vec_t *vec_create(size_t initial_cap, free_fn free_fn);
-void vec_destroy(vec_t *vec);
-void vec_clear(vec_t *vec);
+hash_map_t *map_create(size_t initial_cap, free_fn free_fn, cmp_fn cmp);
+void hash_map_destroy(hash_map_t *map);
+void hash_map_clear(hash_map_t *map);
 
 // Capacity & Info
-size_t vec_size(const vec_t *vec);
-size_t vec_capacity(const vec_t *vec);
-bool vec_is_empty(const vec_t *vec);
-status_t vec_reserve(vec_t *vec, size_t new_cap);
-status_t vec_shrink_to_fit(vec_t *vec);
+size_t hash_map_size(const hash_map_t *map);
+size_t hash_map_capacity(const hash_map_t *map);
+bool hash_map_is_empty(const hash_map_t *map);
 
 // Modifiers
-status_t vec_push(vec_t *vec, void *item);
-status_t vec_pop(vec_t *vec, void **out_item);
-status_t vec_insert(vec_t *vec, size_t index, void *item);
-status_t vec_remove(vec_t *vec, size_t index);
+status_t hash_map_put(hash_map_t *map, void *key, void *value);
+status_t hash_map_remove(hash_map_t *map, const void *key, void **out_item);
 
 // Access
-status_t vec_get(const vec_t *vec, size_t index, void **out_item);
-status_t vec_set(vec_t *vec, size_t index, void *item);
+status_t hash_map_get(const hash_map_t *map, const void *key, void **out_item);
+bool hash_map_contain_key(const hash_map_t *map, const void *key);
 
 #endif
