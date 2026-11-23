@@ -62,21 +62,6 @@ bool deque_is_empty(const deque_t *deque) {
   return deque == NULL || deque->size == 0;
 }
 
-bool deque_contain(const deque_t *deque, const void *item, cmp_fn cmp) {
-  if (deque == NULL || item == NULL)
-    return false;
-
-  deque_node_t *curr = deque->front;
-  while (curr != NULL) {
-    if (cmp(curr->data, item) == 0)
-      return true;
-
-    curr = curr->next;
-  }
-
-  return false;
-}
-
 // Modifiers
 static deque_node_t *deque_node_create(void *item) {
   deque_node_t *node = malloc(sizeof(deque_node_t));
@@ -193,4 +178,19 @@ status_t deque_peek_rear(const deque_t *deque, void **out_item) {
 
   *out_item = deque->rear->data;
   return DS_OK;
+}
+
+bool deque_contains(const deque_t *deque, const void *item, cmp_fn cmp) {
+  if (deque == NULL || item == NULL)
+    return false;
+
+  deque_node_t *curr = deque->front;
+  while (curr != NULL) {
+    if (cmp(curr->data, item) == 0)
+      return true;
+
+    curr = curr->next;
+  }
+
+  return false;
 }

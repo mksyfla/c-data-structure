@@ -134,3 +134,18 @@ status_t queue_peek_rear(const queue_t *queue, void **out_item) {
   *out_item = queue->rear->data;
   return DS_OK;
 }
+
+bool queue_contains(const queue_t *queue, const void *item, cmp_fn cmp) {
+  if (queue == NULL || item == NULL || cmp == NULL)
+    return false;
+
+  queue_node_t *curr = queue->front;
+  while (queue != NULL) {
+    if (cmp(curr->data, item) == 0)
+      return true;
+
+    curr = curr->next;
+  }
+
+  return false;
+}

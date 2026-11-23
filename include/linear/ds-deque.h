@@ -28,5 +28,6 @@ status_t deque_pop_rear(deque_t *deque, void **out_item);
 // Access
 status_t deque_peek_front(const deque_t *deque, void **out_item);
 status_t deque_peek_rear(const deque_t *deque, void **out_item);
+bool deque_contains(const deque_t *deque, const void *item, cmp_fn cmp);
 
 #endif

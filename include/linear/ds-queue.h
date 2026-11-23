@@ -24,5 +24,6 @@ status_t queue_dequeue(queue_t *queue, void **out_item);
 // Access
 status_t queue_peek_front(const queue_t *queue, void **out_item);
 status_t queue_peek_rear(const queue_t *queue, void **out_item);
+bool queue_contains(const queue_t *queue, const void *item, cmp_fn cmp);
 
 #endif

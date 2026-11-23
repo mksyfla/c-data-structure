@@ -135,3 +135,18 @@ status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item) {
 
   return DS_OK;
 }
+
+bool stack_contains(const stack_t *stack, const void *item, cmp_fn cmp) {
+  if (stack == NULL || item == NULL || cmp == NULL)
+    return false;
+
+  stack_node_t *curr = stack->top;
+  while (curr != NULL) {
+    if (cmp(curr->data, item) == 0)
+      return true;
+
+    curr = curr->next;
+  }
+
+  return false;
+}
