@@ -62,6 +62,21 @@ bool deque_is_empty(const deque_t *deque) {
   return deque == NULL || deque->size == 0;
 }
 
+bool deque_contain(const deque_t *deque, const void *item, cmp_fn cmp) {
+  if (deque == NULL || item == NULL)
+    return false;
+
+  deque_node_t *curr = deque->front;
+  while (curr != NULL) {
+    if (cmp(curr->data, item) == 0)
+      return true;
+
+    curr = curr->next;
+  }
+
+  return false;
+}
+
 // Modifiers
 static deque_node_t *deque_node_create(void *item) {
   deque_node_t *node = malloc(sizeof(deque_node_t));
@@ -93,26 +108,6 @@ status_t deque_push_front(deque_t *deque, void *item) {
   return DS_OK;
 }
 
-status_t deque_push_back(deque_t *deque, void *item) {
-  if (deque == NULL || item == NULL)
-    return DS_ERR_INVALID_ARG;
-
-  deque_node_t *node = deque_node_create(item);
-  if (node == NULL)
-    return DS_ERR_ALLOC;
-
-  if (deque->front == NULL || deque->rear == NULL)
-    deque->front = deque->rear = node;
-  else {
-    node->back = deque->rear;
-    deque->rear->next = node;
-    deque->rear = deque->rear->next;
-  }
-
-  deque->size++;
-  return DS_OK;
-}
-
 status_t deque_pop_front(deque_t *deque, void **out_item) {
   if (deque == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
@@ -135,7 +130,27 @@ status_t deque_pop_front(deque_t *deque, void **out_item) {
   return DS_OK;
 }
 
-status_t deque_pop_back(deque_t *deque, void **out_item) {
+status_t deque_push_rear(deque_t *deque, void *item) {
+  if (deque == NULL || item == NULL)
+    return DS_ERR_INVALID_ARG;
+
+  deque_node_t *node = deque_node_create(item);
+  if (node == NULL)
+    return DS_ERR_ALLOC;
+
+  if (deque->front == NULL || deque->rear == NULL)
+    deque->front = deque->rear = node;
+  else {
+    node->back = deque->rear;
+    deque->rear->next = node;
+    deque->rear = deque->rear->next;
+  }
+
+  deque->size++;
+  return DS_OK;
+}
+
+status_t deque_pop_rear(deque_t *deque, void **out_item) {
   if (deque == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
 
@@ -169,7 +184,7 @@ status_t deque_peek_front(const deque_t *deque, void **out_item) {
   return DS_OK;
 }
 
-status_t deque_peek_back(const deque_t *deque, void **out_item) {
+status_t deque_peek_rear(const deque_t *deque, void **out_item) {
   if (deque == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
 

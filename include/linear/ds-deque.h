@@ -16,16 +16,17 @@ void deque_clear(deque_t *deque);
 // Capacity & Info
 size_t deque_size(const deque_t *deque);
 bool deque_is_empty(const deque_t *deque);
+bool deque_contain(const deque_t *deque, const void *item, cmp_fn cmp);
 
 // Modifiers
 status_t deque_push_front(deque_t *deque, void *item);
 status_t deque_pop_front(deque_t *deque, void **out_item);
 
-status_t deque_push_back(deque_t *deque, void *item);
-status_t deque_pop_back(deque_t *deque, void **out_item);
+status_t deque_push_rear(deque_t *deque, void *item);
+status_t deque_pop_rear(deque_t *deque, void **out_item);
 
 // Access
 status_t deque_peek_front(const deque_t *deque, void **out_item);
-status_t deque_peek_back(const deque_t *deque, void **out_item);
+status_t deque_peek_rear(const deque_t *deque, void **out_item);
 
 #endif

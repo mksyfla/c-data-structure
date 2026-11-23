@@ -12,4 +12,6 @@ typedef enum {
 
 typedef void (*free_fn)(void *ptr);
 
+typedef int (*cmp_fn)(const void *a, const void *b);
+
 #endif
