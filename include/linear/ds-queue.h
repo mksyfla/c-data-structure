@@ -1,13 +1,12 @@
 #ifndef DS_QUEUE_H
 #define DS_QUEUE_H
 
-#include "../errors/ds-error.h"
+#include "../core/ds-types.h"
 #include <stddef.h>
 #include <stdbool.h>
 
 typedef struct queue_node queue_node_t;
 typedef struct ds_queue queue_t;
-typedef void (*free_fn)(void *ptr);
 
 // Lifecycle
 queue_t *queue_create(free_fn free_fn);
@@ -23,6 +22,7 @@ status_t queue_enqueue(queue_t *queue, void *item);
 status_t queue_dequeue(queue_t *queue, void **out_item);
 
 // Access
-status_t queue_peek(const queue_t *queue, void **out_item);
+status_t queue_peek_front(const queue_t *queue, void **out_item);
+status_t queue_peek_rear(const queue_t *queue, void **out_item);
 
 #endif

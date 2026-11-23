@@ -1,13 +1,12 @@
 #ifndef DS_STACK_H
 #define DS_STACK_H
 
-#include "../errors/ds-error.h"
+#include "../core/ds-types.h"
 #include <stddef.h>
 #include <stdbool.h>
 
 typedef struct stack_node stack_node_t;
 typedef struct ds_stack stack_t;
-typedef void (*free_fn)(void *ptr);
 
 // Lifecycle
 stack_t *stack_create(free_fn free_fn);
@@ -24,5 +23,6 @@ status_t stack_pop(stack_t *stack, void **out_item);
 
 // Access
 status_t stack_peek(const stack_t *stack, void **out_item);
+status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item);
 
 #endif

@@ -1,4 +1,4 @@
-#include "ds-deque.h"
+#include "../../include/linear/ds-deque.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>

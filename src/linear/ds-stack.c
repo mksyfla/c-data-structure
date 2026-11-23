@@ -1,4 +1,5 @@
-#include "ds-stack.h"
+#include "../../include/linear/ds-stack.h"
+#include <corecrt.h>
 #include <stdlib.h>
 
 struct stack_node {
@@ -109,5 +110,28 @@ status_t stack_peek(const stack_t *stack, void **out_item) {
     return DS_ERR_EMPTY;
 
   *out_item = stack->top->data;
+  return DS_OK;
+}
+
+status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item) {
+  if (stack == NULL || out_item == NULL)
+    return DS_ERR_INVALID_ARG;
+
+  if (stack->size == 0)
+    return DS_ERR_EMPTY;
+
+  if (offset >= stack->size)
+    return DS_ERR_OUT_OF_BOUNDS;
+
+  stack_node_t *curr = stack->top;
+  size_t i = 0;
+
+  while (curr != NULL && i < offset) {
+    if (i == offset)
+      *out_item = curr->data;
+
+    curr = curr->next;
+  }
+
   return DS_OK;
 }

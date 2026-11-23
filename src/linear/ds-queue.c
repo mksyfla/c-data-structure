@@ -1,4 +1,4 @@
-#include "ds-queue.h"
+#include "../../include/linear/ds-queue.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -113,7 +113,7 @@ status_t queue_dequeue(queue_t *queue, void **out_item) {
 }
 
 // Access
-status_t queue_peek(const queue_t *queue, void **out_item) {
+status_t queue_peek_front(const queue_t *queue, void **out_item) {
   if (queue == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
 
@@ -121,5 +121,16 @@ status_t queue_peek(const queue_t *queue, void **out_item) {
     return DS_ERR_EMPTY;
 
   *out_item = queue->front->data;
+  return DS_OK;
+}
+
+status_t queue_peek_rear(const queue_t *queue, void **out_item) {
+  if (queue == NULL || out_item == NULL)
+    return DS_ERR_INVALID_ARG;
+
+  if (queue->size == 0)
+    return DS_ERR_EMPTY;
+
+  *out_item = queue->rear->data;
   return DS_OK;
 }
