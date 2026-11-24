@@ -13,12 +13,11 @@ struct ds_queue {
   queue_node_t *rear;
   size_t size;
   free_fn free_fn;
-  cmp_fn cmp_fn;
 };
 
 // Lifecycle
-queue_t *queue_create(free_fn free_fn, cmp_fn cmp) {
-  if (free_fn == NULL || cmp == NULL)
+queue_t *queue_create(free_fn free_fn) {
+  if (free_fn == NULL)
     return NULL;
 
   queue_t *queue = malloc(sizeof(queue_t));
@@ -28,7 +27,6 @@ queue_t *queue_create(free_fn free_fn, cmp_fn cmp) {
   queue->front = queue->rear = NULL;
   queue->size = 0;
   queue->free_fn = free_fn;
-  queue->cmp_fn = cmp;
   return queue;
 }
 
@@ -140,13 +138,13 @@ status_t queue_peek_rear(const queue_t *queue, void **out_item) {
   return DS_OK;
 }
 
-bool queue_contains(const queue_t *queue, const void *item) {
+bool queue_contains(const queue_t *queue, const void *item, cmp_fn cmp) {
   if (queue == NULL || item == NULL)
     return false;
 
   queue_node_t *curr = queue->front;
   while (curr != NULL) {
-    if (queue->cmp_fn(curr->data, item) == 0)
+    if (cmp(curr->data, item) == 0)
       return true;
 
     curr = curr->next;

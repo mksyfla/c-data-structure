@@ -9,7 +9,7 @@ typedef struct queue_node queue_node_t;
 typedef struct ds_queue queue_t;
 
 // Lifecycle
-queue_t *queue_create(free_fn free_fn, cmp_fn cmp);
+queue_t *queue_create(free_fn free_fn);
 void queue_destroy(queue_t *queue);
 void queue_clear(queue_t *queue);
 
@@ -24,6 +24,6 @@ status_t queue_dequeue(queue_t *queue, void **out_item);
 // Access
 status_t queue_peek_front(const queue_t *queue, void **out_item);
 status_t queue_peek_rear(const queue_t *queue, void **out_item);
-bool queue_contains(const queue_t *queue, const void *item);
+bool queue_contains(const queue_t *queue, const void *item, cmp_fn cmp);
 
 #endif
