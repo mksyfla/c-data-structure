@@ -15,7 +15,7 @@
 // #include "linear/ring_buffer.h"
 
 // Associative
-// #include "associative/hash_map.h"
+#include "associative/ds-hash-map.h"
 // #include "associative/hash_set.h"
 
 // Trees

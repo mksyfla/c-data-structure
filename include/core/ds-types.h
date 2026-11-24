@@ -10,7 +10,8 @@ typedef enum {
     DS_ERR_EMPTY,
     DS_ERR_OVERFLOW,
     DS_ERR_INVALID_ARG,
-    DS_ERR_NOT_FOUND
+    DS_ERR_NOT_FOUND,
+    DS_ERR_FULL
 } status_t;
 
 typedef void (*free_fn)(void *ptr);
