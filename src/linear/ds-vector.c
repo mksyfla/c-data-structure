@@ -1,5 +1,4 @@
 #include "../../include/linear/ds-vector.h"
-#include <corecrt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -91,8 +90,9 @@ static status_t vector_shrink(vector_t *vector) {
   if (vector == NULL)
     return DS_ERR_INVALID_ARG;
 
-  size_t target_cap = vector->size < vector_DEFAULT_CAP ? vector_DEFAULT_CAP
-                                                        : vector->capacity / 2;
+  size_t target_cap = (vector->size < vector_DEFAULT_CAP)
+                          ? vector_DEFAULT_CAP
+                          : vector->capacity / 2;
   if (target_cap == vector->capacity)
     return DS_OK;
 
