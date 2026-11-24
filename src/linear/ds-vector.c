@@ -1,4 +1,5 @@
 #include "../../include/linear/ds-vector.h"
+#include <corecrt.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -92,8 +93,8 @@ static status_t vector_shrink(vector_t *vector) {
   if (vector == NULL)
     return DS_ERR_INVALID_ARG;
 
-  size_t target_cap =
-      vector->size < vector_DEFAULT_CAP ? vector_DEFAULT_CAP : vector->size;
+  size_t target_cap = vector->size < vector_DEFAULT_CAP ? vector_DEFAULT_CAP
+                                                        : vector->capacity / 2;
   if (target_cap == vector->capacity)
     return DS_OK;
 
@@ -143,7 +144,7 @@ status_t vector_insert(vector_t *vector, size_t index, void *item) {
   if (vector == NULL || item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index >= vector->size || index < 0)
+  if (index > vector->size)
     return DS_ERR_OUT_OF_BOUNDS;
 
   if (vector->size == vector->capacity) {
@@ -167,7 +168,7 @@ status_t vector_remove(vector_t *vector, size_t index, void **out_item) {
   if (vector->size == 0)
     return DS_ERR_EMPTY;
 
-  if (index >= vector->size || index < 0)
+  if (index >= vector->size)
     return DS_ERR_OUT_OF_BOUNDS;
 
   *out_item = vector->data[index];
@@ -186,7 +187,7 @@ status_t vector_set(vector_t *vector, size_t index, void *item) {
   if (vector == NULL || item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index >= vector->size || index < 0)
+  if (index >= vector->size)
     return DS_ERR_OUT_OF_BOUNDS;
 
   if (vector->free_fn != NULL && vector->data[index] != NULL &&
@@ -202,7 +203,7 @@ status_t vector_get(const vector_t *vector, size_t index, void **out_item) {
   if (vector == NULL || out_item == NULL)
     return DS_ERR_INVALID_ARG;
 
-  if (index >= vector->size || index < 0)
+  if (index >= vector->size)
     return DS_ERR_OUT_OF_BOUNDS;
 
   *out_item = vector->data[index];
@@ -213,7 +214,7 @@ bool vector_contains(const vector_t *vector, const void *item) {
   if (vector == NULL || item == NULL)
     return false;
 
-  for (int i = 0; i < vector->size; i++)
+  for (size_t i = 0; i < vector->size; i++)
     if (vector->cmp_fn(vector->data[i], item) == 0)
       return true;
 

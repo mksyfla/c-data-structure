@@ -16,7 +16,6 @@ void deque_clear(deque_t *deque);
 // Capacity & Info
 size_t deque_size(const deque_t *deque);
 bool deque_is_empty(const deque_t *deque);
-bool deque_contain(const deque_t *deque, const void *item);
 
 // Modifiers
 status_t deque_push_front(deque_t *deque, void *item);

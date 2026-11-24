@@ -145,7 +145,7 @@ bool queue_contains(const queue_t *queue, const void *item) {
     return false;
 
   queue_node_t *curr = queue->front;
-  while (queue != NULL) {
+  while (curr != NULL) {
     if (queue->cmp_fn(curr->data, item) == 0)
       return true;
 

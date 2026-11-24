@@ -5,9 +5,8 @@
 
 static size_t hash_function(const char *key, size_t capacity) {
   size_t hash = 0;
-  while (*key != '\0') {
-    hash *= 31 + (size_t)*key;
-  }
+  while (*key != '\0')
+    hash = hash * 31 + (size_t)(*key++);
 
   return hash % capacity;
 }
@@ -55,6 +54,7 @@ void hash_map_destroy(hash_map_t *map) {
     return;
 
   hash_map_clear(map);
+  free(map->buckets);
   free(map);
 }
 
@@ -66,11 +66,14 @@ void hash_map_clear(hash_map_t *map) {
     map_entry *curr = map->buckets[i];
     while (curr != NULL) {
       map_entry *next = curr->next;
-      if (map->free_fn != NULL)
-        map->free_fn(curr);
+      if (map->free_fn != NULL && curr->value != NULL)
+        map->free_fn(curr->value);
 
+      free(curr);
       curr = next;
     }
+
+    map->buckets[i] = NULL;
   }
 
   map->size = 0;
@@ -113,6 +116,9 @@ status_t hash_map_put(hash_map_t *map, void *key, void *value) {
 
   while (curr != NULL) {
     if (map->cmp_fn(curr->key, key) == 0) {
+      if (map->free_fn != NULL && curr->value != NULL && curr->value != value)
+        map->free_fn(curr->value);
+
       curr->value = value;
       return DS_OK;
     }
@@ -137,22 +143,25 @@ status_t hash_map_remove(hash_map_t *map, const void *key, void **out_item) {
   size_t hash = hash_function(key, map->capacity);
   map_entry *curr = map->buckets[hash];
   map_entry *prev = NULL;
+
   while (curr != NULL) {
     if (map->cmp_fn(curr->key, key) == 0) {
       *out_item = curr->value;
-      break;
+      if (prev == NULL)
+        map->buckets[hash] = curr->next;
+      else
+        prev->next = curr->next;
+
+      free(curr);
+      map->size--;
+      return DS_OK;
     }
 
     prev = curr;
     curr = curr->next;
   }
 
-  if (prev == NULL)
-    map->buckets[hash] = curr->next;
-  else
-    prev->next = curr->next;
-
-  return DS_OK;
+  return DS_ERR_NOT_FOUND;
 }
 
 // Access

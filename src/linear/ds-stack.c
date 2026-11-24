@@ -128,15 +128,10 @@ status_t stack_peek_n(const stack_t *stack, size_t offset, void **out_item) {
     return DS_ERR_OUT_OF_BOUNDS;
 
   stack_node_t *curr = stack->top;
-  size_t i = 0;
-
-  while (curr != NULL && i < offset) {
-    if (i == offset)
-      *out_item = curr->data;
-
+  for (size_t i = 0; i < offset; i++)
     curr = curr->next;
-  }
 
+  *out_item = curr->data;
   return DS_OK;
 }
 
